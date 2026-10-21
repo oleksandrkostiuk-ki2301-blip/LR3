@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Лабораторна робота №3 - Функції в JavaScript</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: 30px auto; padding: 0 15px; }
+    h2 { margin-top: 25px; }
+    button { padding: 8px 14px; margin: 3px; cursor: pointer; }
+    #output { background: #f4f4f4; border: 1px solid #ccc; border-radius: 6px;
+              padding: 12px; min-height: 120px; margin-top: 20px; }
+    #output p { margin: 4px 0; }
+    .task { font-weight: bold; margin-top: 10px !important; }
+    #out { margin: 6px 3px; font-size: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Лабораторна робота №3</h1>
+
+  <h2>Рівень 1</h2>
+  <button onclick="task4_1()">Завдання 1</button>
+  <button onclick="task4_2()">Завдання 2</button>
+  <button onclick="task4_3()">Завдання 3</button>
+
+  <h2>Рівень 2</h2>
+  <button onclick="task7_1()">Завдання 1</button>
+  <button onclick="task7_2()">Завдання 2</button>
+  <button onclick="task7_3()">Завдання 3</button>
+
+  <h2>Рівень 3</h2>
+  <p><b>Завдання 1:</b></p>
+  <button onclick="task10_1()">Задати межі</button>
+  <button id="next">Next number</button>
+  <div id="out"></div>
+
+  <p><b>Завдання 2 і 3:</b></p>
+  <button onclick="task10_2()">Завдання 2</button>
+  <button onclick="task10_3()">Завдання 3</button>
+
+  <p><b>Завдання 4:</b></p>
+  <button onclick="task10_4()">Ввести ім'я</button>
+  <button id="hello">Say</button>
+  <button id="helloBad">Say (без bind)</button>
+
+  <h2>Результат</h2>
+  <button onclick="clearOutput()">Очистити</button>
+  <div id="output"></div>
+
+  <script>
+    function print(text, isTitle) {
+      const p = document.createElement('p');
+      p.textContent = text;
+      if (isTitle) p.className = 'task';
+      document.getElementById('output').appendChild(p);
+    }
+    function clearOutput() {
+      document.getElementById('output').innerHTML = '';
+    }
+
+    function task4_1() {
+      print('Рівень 1, завдання 1', true);
+
+      function getFullName(firstName, lastName) {
+        return firstName + ' ' + lastName;
+      }
+      function showGreeting(fullName, age) {
+        print(`Hello, ${fullName}! You are ${age} years old.`);
+      }
+
+      let firstName = prompt('Enter first name');
+      let lastName = prompt('Enter last name');
+      let age = prompt('Enter your age');
+      let fullName = getFullName(firstName, lastName);
+      showGreeting(fullName, age);
+    }
+
+    function task4_2() {
+      print('Рівень 1, завдання 2', true);
+
+      function getStudentInfo() {
+        let name = prompt('Enter student name');
+        let score = Number(prompt('Enter score (0-12)'));
+        return { name: name, score: score };
+      }
+      function checkGrade(score) {
+        if (score >= 10) return 'Excellent';
+        if (score >= 7) return 'Good';
+        if (score >= 4) return 'Satisfactory';
+        return 'Fail';
+      }
+      function showResult(name, grade) {
+        print('Student: ' + name);
+        print('Grade: ' + grade);
+      }
+
+      let info = getStudentInfo();
+      let grade = checkGrade(info.score);
+      showResult(info.name, grade);
+    }
+
+    function task4_3() {
+      print('Рівень 1, завдання 3', true);
+
+      function calculateTip(amount, percent = 10) {
+        return amount * percent / 100;
+      }
+      function showResult(amount, tip) {
+        print('Bill: ' + amount + ' грн');
+        print('Tip (10%): ' + tip + ' грн');
+        print('Total: ' + (amount + tip) + ' грн');
+      }
+
+      let amount = Number(prompt('Enter bill amount (грн)', 450));
+      let tip = calculateTip(amount);
+      showResult(amount, tip);
+    }
+
+    function task7_1() {
+      print('Рівень 2, завдання 1', true);
+
+      function startGreetingTimer(message, seconds, callback) {
+        print(`Таймер запущено: ${seconds} с...`);
+        setTimeout(() => {
+          print(message);
+          callback();
+        }, seconds * 1000);
+      }
+
+      startGreetingTimer('Hello! Timer finished.', 3, () => {
+        print('Time is up!');
+        alert('Time is up!');
+      });
+    }
+
+    function task7_2() {
+      print('Рівень 2, завдання 2', true);
+
+      function calculate(a, b, operation) {
+        switch (operation) {
+          case '+': return a + b;
+          case '-': return a - b;
+          case '*': return a * b;
+          case '/': return a / b;
+          default: return 'Invalid operation';
+        }
+      }
+      function showResult() {
+        let a = Number(prompt('Enter first number'));
+        let b = Number(prompt('Enter second number'));
+        let operation = prompt('Enter operation: + - * /');
+        let result = calculate(a, b, operation);
+        alert('Result: ' + result);
+        print(`${a} ${operation} ${b} = ${result}`);
+      }
+
+      showResult();
+    }
+
+    function task7_3() {
+      print('Рівень 2, завдання 3', true);
+
+      function createClickCounter() {
+        let count = 0;
+        return function () {
+          count++;
+          console.log('Count: ' + count);
+          print('Count: ' + count);
+        };
+      }
+
+      const counter = createClickCounter();
+      counter();
+      counter();
+      counter();
+      print('змінна count запам\'ятовується завдяки замиканню.');
+    }
+
+    let numberGen = null;
+
+    function* randomGenerator(min, max) {
+      while (true) {
+        yield Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+    }
+
+    function task10_1() {
+      let min = Number(prompt('Enter min'));
+      let max = Number(prompt('Enter max'));
+      numberGen = randomGenerator(min, max);
+      document.getElementById('out').textContent = `Межі: ${min} - ${max}. Натискай Next number.`;
+    }
+
+    document.getElementById('next').onclick = function () {
+      if (!numberGen) {
+        alert('Спочатку натисни «Задати межі»');
+        return;
+      }
+      document.getElementById('out').textContent = numberGen.next().value;
+    };
+
+    function task10_2() {
+      print('Рівень 3, завдання 2', true);
+
+      function* passwordGenerator() {
+        let password = '';
+        while (true) {
+          const ch = yield;
+          if (ch === 'done') {
+            return password;
+          }
+          password += ch;
+        }
+      }
+
+      const gen = passwordGenerator();
+      gen.next();
+      while (true) {
+        let ch = prompt("Enter a symbol (or 'done' to finish)");
+        if (ch === null) ch = 'done';
+        let result = gen.next(ch);
+        if (result.done) {
+          print('Password: ' + result.value);
+          break;
+        }
+      }
+    }
+
+    function task10_3() {
+      print('Рівень 3, завдання 3', true);
+
+      function* chatBot() {
+        const name = yield 'Hi! What is your name?';
+        yield `Nice to meet you, ${name}! How are you?`;
+        yield 'Goodbye!';
+      }
+
+      const gen = chatBot();
+      let step = gen.next();
+      while (!step.done) {
+        print('Bot: ' + step.value);
+        let answer = null;
+        if (step.value !== 'Goodbye!') {
+          answer = prompt(step.value);
+          print('You: ' + answer);
+        }
+        step = gen.next(answer);
+      }
+    }
+
+    function task10_4() {
+      print('Рівень 3, завдання 4', true);
+      let name = prompt('Enter your name');
+
+      const user = {
+        name: name,
+        say() {
+          alert(`Hello, ${this.name}`);
+          print(`Hello, ${this.name}`);
+        }
+      };
+
+      document.getElementById('helloBad').onclick = user.say;
+      document.getElementById('hello').onclick = user.say.bind(user);
+
+      print('Кнопка «Say» працює правильно (bind). Кнопка «Say (без bind)» покаже порожнє ім\'я.');
+      print("при простому присвоєнні user.say функція відривається від об'єкта, тому this стає кнопкою. user.say.bind(user) жорстко прив'язує this до user.");
+    }
+  </script>
+</body>
+</html>
